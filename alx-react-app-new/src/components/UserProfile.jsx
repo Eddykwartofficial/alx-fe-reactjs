@@ -7,8 +7,7 @@ const UserProfile = (props) => {
             borderRadius: '10px',
             backgroundColor: '#f9f9f9',
             boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-            maxWidth: '400px',
-            fontFamily: 'Arial, sans-serif'
+            maxWidth: '400px'
         }}>
             <h2 style={{ 
                 color: 'blue',
@@ -21,8 +20,7 @@ const UserProfile = (props) => {
             </h2>
             <p style={{
                 fontSize: '1.1rem',
-                margin: '10px 0',
-                color: '#333'
+                margin: '10px 0'
             }}>
                 Age: <span style={{ 
                     fontWeight: 'bold',
@@ -36,14 +34,12 @@ const UserProfile = (props) => {
                 fontSize: '1rem',
                 lineHeight: '1.6',
                 color: '#555',
-                fontStyle: 'italic',
-                backgroundColor: '#fff',
-                padding: '10px',
-                borderRadius: '5px',
-                border: '1px solid #ddd'
+                fontStyle: 'italic'
             }}>
                 Bio: {props.bio}
             </p>
         </div>
     );
 };
+
+export default UserProfile;
