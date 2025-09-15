@@ -1,23 +1,25 @@
-import AddRecipeForm from './components/AddRecipeForm';
-import RecipeList from './components/RecipeList';
-import SearchBar from './components/SearchBar';
-import FavoritesList from './components/FavoritesList';
-import RecommendationsList from './components/RecommendationsList';
+import { useState } from "react";
+import RecipeList from "./components/RecipeList";
+import AddRecipeForm from "./components/AddRecipeForm";
+import addRecipe from "./components/addRecipe";
+import updateRecipe from "./components/updateRecipe";
+import deleteRecipe from "./components/deleteRecipe";
+import EditRecipeForm from "./components/EditRecipeForm";
+import { BrowserRouter, Route, Routes, router } from "react-router-dom";
+import "./App.css";
 
 function App() {
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
-      <header style={{ textAlign: 'center', marginBottom: '3rem' }}>
-        <h1 style={{ color: '#51cf66', fontSize: '2.5rem' }}>🍳 Recipe Sharing App</h1>
-        <p>Discover, share, and save your favorite recipes!</p>
-      </header>
-
-      <SearchBar />
-      <AddRecipeForm />
-      <FavoritesList />
-      <RecommendationsList />
-      <RecipeList />
-    </div>
+    <router>
+      <Routes>
+        {" "}
+        <Route path="/" element={<RecipeList />} />
+        <Route path="/recipes/:id" element={<RecipeDetails />} />
+        <Route path="/recipes/:id/edit" element={<EditRecipeForm />} />
+        <Route path="/recipes/:id/" element={<FavoritesList />} />
+        <Route path="/recipes/:id/" element={<RecommendationsList />} />
+      </Routes>
+    </router>
   );
 }
 
