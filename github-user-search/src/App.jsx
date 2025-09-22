@@ -1,28 +1,53 @@
 import React, { useState } from "react";
 import Search from "./components/Search";
 import UserList from "./components/UserList";
-import { searchUsers } from "./services/githubService";
+import { searchUsers, fetchUserDetails } from "./services/githubService";
 
 const App = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // detailed user objects
   const [status, setStatus] = useState("idle"); // idle | loading | error | success
   const [page, setPage] = useState(1);
-  const [lastSearch, setLastSearch] = useState({});
+  const [lastQuery, setLastQuery] = useState({ username: "", location: "", minRepos: "" });
+  const [totalCount, setTotalCount] = useState(0);
 
-  const handleSearch = async (username, location, minRepos, newSearch = true) => {
+  const fetchAndEnrich = async (items) => {
+    // items are search result stubs with .login
+    // fetch details for each (be aware of rate limits)
+    const detailPromises = items.map((it) => fetchUserDetails(it.login).catch(() => null));
+    const detailed = await Promise.all(detailPromises);
+    // filter out failed fetches (null)
+    return detailed.filter(Boolean);
+  };
+
+  const handleSearch = async (username = "", location = "", minRepos = "") => {
+    setStatus("loading");
+    setPage(1);
+    try {
+      const { items, total_count } = await searchUsers(username, location, minRepos, 1);
+      setTotalCount(total_count);
+      const detailed = await fetchAndEnrich(items);
+      setUsers(detailed);
+      setLastQuery({ username, location, minRepos });
+      setPage(2);
+      setStatus("success");
+    } catch (err) {
+      console.error(err);
+      setUsers([]);
+      setStatus("error");
+    }
+  };
+
+  const loadMore = async () => {
     setStatus("loading");
     try {
-      const data = await searchUsers(username, location, minRepos, newSearch ? 1 : page);
-      if (newSearch) {
-        setUsers(data.items);
-        setPage(2);
-        setLastSearch({ username, location, minRepos });
-      } else {
-        setUsers((prev) => [...prev, ...data.items]);
-        setPage((prev) => prev + 1);
-      }
+      const { username, location, minRepos } = lastQuery;
+      const { items } = await searchUsers(username, location, minRepos, page);
+      const detailed = await fetchAndEnrich(items);
+      setUsers((prev) => [...prev, ...detailed]);
+      setPage((p) => p + 1);
       setStatus("success");
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       setStatus("error");
     }
   };
@@ -38,22 +63,29 @@ const App = () => {
       )}
       {status === "error" && (
         <p className="text-center text-red-500 mt-4">
-          Something went wrong. Try again.
+          Something went wrong. Try again or check your API token/rate limit.
         </p>
       )}
-      {status === "success" && <UserList users={users} />}
 
-      {status === "success" && users.length > 0 && (
-        <div className="flex justify-center mt-6">
-          <button
-            onClick={() =>
-              handleSearch(lastSearch.username, lastSearch.location, lastSearch.minRepos, false)
-            }
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-          >
-            Load More
-          </button>
-        </div>
+      {status === "success" && (
+        <>
+          <p className="text-center text-sm text-gray-600 mt-4">
+            Showing <strong>{users.length}</strong> of <strong>{totalCount}</strong> results
+          </p>
+
+          <UserList users={users} />
+
+          {users.length < totalCount && (
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={loadMore}
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              >
+                Load more
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

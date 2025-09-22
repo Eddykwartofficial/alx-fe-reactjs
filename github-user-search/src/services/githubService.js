@@ -1,38 +1,65 @@
 import axios from "axios";
 
 const BASE_URL = "https://api.github.com";
+const PER_PAGE = 10;
+
+const getAuthHeader = () => {
+  const token = import.meta.env.VITE_APP_GITHUB_API_KEY;
+  return token ? { Authorization: `token ${token}` } : {};
+};
 
 /**
- * Fetch users with advanced search filters
+ * Search users using GitHub Search API with advanced query params.
  * @param {string} username
  * @param {string} location
- * @param {number} minRepos
+ * @param {number|string} minRepos
  * @param {number} page
- * @returns {Promise<Object>} { items, total_count }
+ * @returns {Promise<{items: Array, total_count: number}>}
  */
-export const searchUsers = async (username, location, minRepos, page = 1) => {
+export const searchUsers = async (username = "", location = "", minRepos = "", page = 1) => {
   try {
-    let query = "";
-
-    if (username) query += `${username} `;
-    if (location) query += `location:${location} `;
-    if (minRepos) query += `repos:>=${minRepos}`;
+    let q = [];
+    if (username) q.push(username);
+    if (location) q.push(`location:${location}`);
+    if (minRepos) q.push(`repos:>=${minRepos}`);
+    const query = q.length ? q.join(" ") : "type:user";
 
     const response = await axios.get(`${BASE_URL}/search/users`, {
       params: {
-        q: query.trim(),
+        q: query,
+        per_page: PER_PAGE,
         page,
-        per_page: 10, // limit results per page
       },
       headers: {
-        Authorization: import.meta.env.VITE_APP_GITHUB_API_KEY
-          ? `token ${import.meta.env.VITE_APP_GITHUB_API_KEY}`
-          : undefined,
+        ...getAuthHeader(),
       },
     });
 
-    return response.data;
-  } catch (error) {
-    throw new Error("Error fetching users");
+    return {
+      items: response.data.items,
+      total_count: response.data.total_count,
+    };
+  } catch (err) {
+    // bubble the error
+    throw err;
+  }
+};
+
+/**
+ * Get full user details for a username.
+ * Use this to obtain location, public_repos, name, company, etc.
+ * @param {string} username
+ * @returns {Promise<Object>}
+ */
+export const fetchUserDetails = async (username) => {
+  try {
+    const res = await axios.get(`${BASE_URL}/users/${username}`, {
+      headers: {
+        ...getAuthHeader(),
+      },
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
   }
 };

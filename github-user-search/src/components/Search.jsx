@@ -5,40 +5,42 @@ const Search = ({ onSearch }) => {
   const [location, setLocation] = useState("");
   const [minRepos, setMinRepos] = useState("");
 
-  const handleSubmit = (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    onSearch(username, location, minRepos);
+    onSearch(username.trim(), location.trim(), minRepos ? Number(minRepos) : "");
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4"
+      onSubmit={submit}
+      className="bg-white shadow-md rounded-lg p-6 w-full max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4"
     >
       <input
-        type="text"
-        placeholder="Username"
+        className="border rounded-lg p-2 col-span-1 md:col-span-2"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className="border rounded-lg p-2 w-full"
+        placeholder="Username (e.g. octocat)"
+        aria-label="username"
       />
       <input
-        type="text"
-        placeholder="Location"
+        className="border rounded-lg p-2"
         value={location}
         onChange={(e) => setLocation(e.target.value)}
-        className="border rounded-lg p-2 w-full"
+        placeholder="Location (city or country)"
+        aria-label="location"
       />
       <input
-        type="number"
-        placeholder="Min Repos"
+        className="border rounded-lg p-2"
         value={minRepos}
         onChange={(e) => setMinRepos(e.target.value)}
-        className="border rounded-lg p-2 w-full"
+        placeholder="Min repos"
+        type="number"
+        min="0"
+        aria-label="min repos"
       />
       <button
         type="submit"
-        className="col-span-1 md:col-span-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        className="md:col-span-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
       >
         Search
       </button>
