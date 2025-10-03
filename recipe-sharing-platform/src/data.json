@@ -2,12 +2,25 @@
   {
     "id": 1,
     "title": "Spaghetti Carbonara",
-    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
-    "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=400&h=300&fit=crop",
-    "ingredients": ["400g spaghetti", "200g pancetta", "4 eggs", "100g Parmesan"],
-    "instructions": ["Boil pasta", "Fry pancetta", "Mix eggs and cheese", "Combine all"],
-    "prepTime": "15 mins",
-    "cookTime": "20 mins",
-    "servings": 4
+    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper. Quick and comforting!",
+    "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&auto=format&fit=crop"
+  },
+  {
+    "id": 2,
+    "title": "Chicken Tikka Masala",
+    "summary": "Chunks of grilled chicken cooked in a smooth, buttery, and creamy tomato-based gravy. A crowd favorite.",
+    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&auto=format&fit=crop"
+  },
+  {
+    "id": 3,
+    "title": "Classic Caesar Salad",
+    "summary": "Crisp romaine lettuce with homemade Caesar dressing, croutons, and shaved Parmesan cheese. Light and fresh.",
+    "image": "https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&auto=format&fit=crop"
+  },
+  {
+    "id": 4,
+    "title": "Chocolate Chip Cookies",
+    "summary": "Soft and chewy homemade chocolate chip cookies with a perfect golden edge. Perfect for baking.",
+    "image": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&auto=format&fit=crop"
   }
 ]
