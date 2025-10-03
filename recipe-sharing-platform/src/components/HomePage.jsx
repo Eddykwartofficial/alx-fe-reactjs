@@ -1,3 +1,5 @@
+import React, { useState, useEffect} from "react";
+
 const HomePage = ({ recipes, onRecipeClick, onNavigateToAddRecipe }) => {
   return (
     <div className="min-h-screen bg-gray-50">
