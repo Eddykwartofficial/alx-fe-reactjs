@@ -1,94 +1,69 @@
-const RecipeDetailPage = ({ recipe, onBack }) => {
+// src/pages/RecipeDetail.jsx
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+
+export default function RecipeDetail() {
+  const { id } = useParams(); // get ID from URL
+  const [recipe, setRecipe] = useState(null);
+
+  useEffect(() => {
+    async function fetchRecipe() {
+      try {
+        const res = await fetch("/data.json"); // adjust if data.json is elsewhere
+        const data = await res.json();
+        const found = data.recipes.find((r) => String(r.id) === id);
+        setRecipe(found);
+      } catch (error) {
+        console.error("Error fetching recipe:", error);
+      }
+    }
+    fetchRecipe();
+  }, [id]);
+
   if (!recipe) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Recipe not found</p>
+      <div className="flex items-center justify-center h-64 text-gray-500">
+        Loading recipe...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          <button
-            onClick={onBack}
-            className="flex items-center text-white hover:text-orange-100 mb-4 transition-colors"
-          >
-            <ArrowLeft className="h-5 w-5 mr-2" />
-            Back to Recipes
-          </button>
-          <h1 className="text-4xl font-bold">{recipe.title}</h1>
-          <p className="text-orange-100 mt-2">{recipe.summary}</p>
-        </div>
-      </header>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <Link to="/" className="text-blue-500 hover:underline mb-4 block">
+        ← Back to Home
+      </Link>
 
-      {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        {/* Recipe Image */}
-        <div className="mb-8 rounded-lg overflow-hidden shadow-lg">
-          <img
-            src={recipe.image}
-            alt={recipe.title}
-            className="w-full h-96 object-cover"
-          />
-        </div>
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <img
+          src={recipe.image}
+          alt={recipe.title}
+          className="w-full h-64 object-cover"
+        />
+        <div className="p-6">
+          <h1 className="text-3xl font-bold mb-4">{recipe.title}</h1>
 
-        {/* Recipe Info */}
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-lg shadow-md p-4 text-center">
-            <Clock className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-            <p className="text-gray-600 text-sm">Prep Time</p>
-            <p className="font-semibold text-gray-800">{recipe.prepTime}</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4 text-center">
-            <Clock className="h-8 w-8 text-red-500 mx-auto mb-2" />
-            <p className="text-gray-600 text-sm">Cook Time</p>
-            <p className="font-semibold text-gray-800">{recipe.cookTime}</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-md p-4 text-center">
-            <Users className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-            <p className="text-gray-600 text-sm">Servings</p>
-            <p className="font-semibold text-gray-800">{recipe.servings}</p>
-          </div>
-        </div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Ingredients */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Ingredients</h2>
-              <ul className="space-y-2">
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li key={index} className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{ingredient}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {/* Ingredients Section */}
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">Ingredients</h2>
+            <ul className="list-disc pl-6 space-y-1 text-gray-700">
+              {recipe.ingredients.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
           </div>
 
-          {/* Instructions */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Instructions</h2>
-              <ol className="space-y-4">
-                {recipe.instructions.map((instruction, index) => (
-                  <li key={index} className="flex">
-                    <span className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-semibold mr-4">
-                      {index + 1}
-                    </span>
-                    <p className="text-gray-700 pt-1">{instruction}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
+          {/* Instructions Section */}
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Instructions</h2>
+            <ol className="list-decimal pl-6 space-y-2 text-gray-700">
+              {recipe.instructions.map((step, index) => (
+                <li key={index}>{step}</li>
+              ))}
+            </ol>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
-};
-
+}
