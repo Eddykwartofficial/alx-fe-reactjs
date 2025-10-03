@@ -1,8 +1,13 @@
+// tailwind.config.js
+
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: false, // You can set it to 'media' or 'class' if needed
+  content: [
+    './index.html', // Important for Vite projects
+    './src/**/*.{js,jsx,ts,tsx}',
+  ],
   theme: {
     extend: {},
   },
   plugins: [],
-};
+}
