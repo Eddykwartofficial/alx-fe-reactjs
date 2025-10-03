@@ -1,7 +1,8 @@
-// src/components/AddRecipeForm.jsx
-import React, { useState } from "react";
+// src/pages/AddRecipeForm.jsx
 
-export default function AddRecipeForm({ onAdd }) {
+import React, { useState } from 'react';
+import { ArrowLeft, X } from 'lucide-react';
+
 const AddRecipeForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     title: '',
@@ -13,7 +14,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
     cookTime: '',
     servings: ''
   });
-
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
 
@@ -33,16 +33,19 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
       case 'cookTime':
         return !value.trim() ? 'This field is required' : '';
       case 'servings':
-        return !value || value < 1 ? 'Servings must be at least 1' : '';
+        return !value || parseInt(value) < 1 ? 'Servings must be at least 1' : '';
       default:
         return '';
     }
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    // Explicitly using e.target for name and value
+    const name = e.target.name; 
+    const value = e.target.value;
     
+    setFormData(prev => ({ ...prev, [name]: value }));
+
     if (touched[name]) {
       setErrors(prev => ({ ...prev, [name]: validateField(name, value) }));
     }
@@ -56,7 +59,7 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate all fields
     const newErrors = {};
     Object.keys(formData).forEach(key => {
@@ -64,9 +67,11 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
       if (error) newErrors[key] = error;
     });
 
+    // Mark all fields as touched for initial submission validation display
+    setTouched(Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setTouched(Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {}));
       return;
     }
 
@@ -102,11 +107,10 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
           <p className="text-orange-100 mt-2">Share your culinary creation with the community</p>
         </div>
       </header>
-
       {/* Form */}
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
@@ -131,7 +135,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                 </p>
               )}
             </div>
-
             {/* Summary */}
             <div>
               <label htmlFor="summary" className="block text-sm font-medium text-gray-700 mb-2">
@@ -156,7 +159,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                 </p>
               )}
             </div>
-
             {/* Image URL */}
             <div>
               <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
@@ -173,7 +175,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
               />
               <p className="mt-1 text-sm text-gray-500">Leave blank for default image</p>
             </div>
-
             {/* Time and Servings */}
             <div className="grid md:grid-cols-3 gap-4">
               <div>
@@ -196,7 +197,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                   <p className="mt-1 text-xs text-red-600">{errors.prepTime}</p>
                 )}
               </div>
-
               <div>
                 <label htmlFor="cookTime" className="block text-sm font-medium text-gray-700 mb-2">
                   Cook Time *
@@ -217,7 +217,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                   <p className="mt-1 text-xs text-red-600">{errors.cookTime}</p>
                 )}
               </div>
-
               <div>
                 <label htmlFor="servings" className="block text-sm font-medium text-gray-700 mb-2">
                   Servings *
@@ -240,7 +239,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                 )}
               </div>
             </div>
-
             {/* Ingredients */}
             <div>
               <label htmlFor="ingredients" className="block text-sm font-medium text-gray-700 mb-2">
@@ -265,7 +263,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                 </p>
               )}
             </div>
-
             {/* Instructions */}
             <div>
               <label htmlFor="instructions" className="block text-sm font-medium text-gray-700 mb-2">
@@ -290,7 +287,6 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                 </p>
               )}
             </div>
-
             {/* Submit Buttons */}
             <div className="flex gap-4 pt-4">
               <button
@@ -301,26 +297,17 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
                 Cancel
               </button>
               <button
-                onClick={handleSubmit}
+                type="submit"
                 className="flex-1 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
               >
                 Add Recipe
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </main>
     </div>
   );
 };
 
-
-
-
- 
-
-
-
-
-
-
+export default AddRecipeForm;
