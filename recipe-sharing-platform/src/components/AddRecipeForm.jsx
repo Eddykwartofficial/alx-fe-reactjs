@@ -1,3 +1,7 @@
+// src/components/AddRecipeForm.jsx
+import React, { useState } from "react";
+
+export default function AddRecipeForm({ onAdd }) {
 const AddRecipeForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     title: '',
@@ -309,4 +313,14 @@ const AddRecipeForm = ({ onSubmit, onCancel }) => {
     </div>
   );
 };
+
+
+
+
+ 
+
+
+
+
+
 
