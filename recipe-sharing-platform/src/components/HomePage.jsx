@@ -1,74 +1,54 @@
-// src/components/HomePage.jsx
-
-import React, { useState, useEffect } from 'react';
-import RecipeCard from './RecipeCard';
-// We use a regular import for the JSON file in Vite
-import initialRecipesData from '../data.json'; 
-
-const HomePage = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Load mock data on mount
-  useEffect(() => {
-    // Simulate data fetching delay
-    const timer = setTimeout(() => {
-      setRecipes(initialRecipesData);
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-50">
-        <p className="text-xl text-gray-500">Loading recipes...</p>
-      </div>
-    );
-  }
-
+const HomePage = ({ recipes, onRecipeClick, onNavigateToAddRecipe }) => {
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <header className="bg-white shadow-md">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <h1 className="text-4xl font-extrabold text-orange-600">
-            Recipe Explorer 🍳
-          </h1>
-          <p className="text-lg text-gray-600 mt-2">
-            Discover and share amazing home-cooked recipes.
-          </p>
+      {/* Header */}
+      <header className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <ChefHat className="h-10 w-10" />
+              <div>
+                <h1 className="text-3xl font-bold">Recipe Sharing Platform</h1>
+                <p className="text-orange-100">Discover and share amazing recipes</p>
+              </div>
+            </div>
+            <button
+              onClick={onNavigateToAddRecipe}
+              className="flex items-center bg-white text-orange-500 px-4 py-2 rounded-lg font-semibold hover:bg-orange-50 transition-colors"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Add Recipe
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Main Content (Recipe Grid) */}
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8">Popular Dishes</h2>
-        
-        {/* Responsive Grid Layout */}
-        <div 
-          className="
-            grid 
-            grid-cols-1        /* Default: 1 column for small screens */
-            sm:grid-cols-2     /* Small screens and up: 2 columns */
-            lg:grid-cols-3     /* Large screens and up: 3 columns */
-            xl:grid-cols-4     /* Extra large screens: 4 columns */
-            gap-6 sm:gap-8
-          "
-        >
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Popular Recipes</h2>
+          <p className="text-gray-600">Browse our collection of delicious recipes</p>
+        </div>
+
+        {/* Recipe Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {recipes.map((recipe) => (
-            // Note: onClick handler for navigation will be added in a later task
-            <RecipeCard key={recipe.id} recipe={recipe} />
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onClick={() => onRecipeClick(recipe.id)}
+            />
           ))}
         </div>
-        
+
         {recipes.length === 0 && (
-          <p className="text-center text-gray-500 py-10">No recipes found.</p>
+          <div className="text-center py-12">
+            <ChefHat className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600 text-lg">No recipes yet. Be the first to add one!</p>
+          </div>
         )}
       </main>
     </div>
   );
 };
 
-export default HomePage;

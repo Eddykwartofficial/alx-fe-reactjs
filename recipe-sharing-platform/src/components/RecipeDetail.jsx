@@ -1,8 +1,3 @@
-// src/pages/RecipeDetailPage.jsx
-
-import React from 'react';
-import { Clock, Users, ArrowLeft, Check } from 'lucide-react';
-
 const RecipeDetailPage = ({ recipe, onBack }) => {
   if (!recipe) {
     return (
@@ -28,6 +23,7 @@ const RecipeDetailPage = ({ recipe, onBack }) => {
           <p className="text-orange-100 mt-2">{recipe.summary}</p>
         </div>
       </header>
+
       {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Recipe Image */}
@@ -38,6 +34,7 @@ const RecipeDetailPage = ({ recipe, onBack }) => {
             className="w-full h-96 object-cover"
           />
         </div>
+
         {/* Recipe Info */}
         <div className="grid md:grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-lg shadow-md p-4 text-center">
@@ -56,6 +53,7 @@ const RecipeDetailPage = ({ recipe, onBack }) => {
             <p className="font-semibold text-gray-800">{recipe.servings}</p>
           </div>
         </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Ingredients */}
           <div className="lg:col-span-1">
@@ -71,6 +69,7 @@ const RecipeDetailPage = ({ recipe, onBack }) => {
               </ul>
             </div>
           </div>
+
           {/* Instructions */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -93,4 +92,3 @@ const RecipeDetailPage = ({ recipe, onBack }) => {
   );
 };
 
-export default RecipeDetailPage;
