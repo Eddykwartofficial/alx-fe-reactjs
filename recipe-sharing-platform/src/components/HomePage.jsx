@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from "react";
 import RecipeCard from './AddRecipeForm';
 import initialRecipesData from '../data.json';
+import { Link } from "react-router-dom";
 
 const HomePage = ({ recipes, onRecipeClick, onNavigateToAddRecipe }) => {
   return (
